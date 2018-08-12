@@ -34,7 +34,7 @@ namespace API.Controllers
         [Route("tasks", Name = "TasksList")]
         [HttpGet]
 
-        public IHttpActionResult GetTasks(string sort = "id", string label = null, int page = 1, int pageSize = 5)
+        public IHttpActionResult GetTasks(string sort = "id", string label = null, string fields = null, int page = 1, int pageSize = 5)
         {
             try
             {
