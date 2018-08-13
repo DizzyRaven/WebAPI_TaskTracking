@@ -29,10 +29,11 @@ namespace BLL.Services
         }
 
         // Interaction with DAL using IUnitOfWork object
-        public TaskService(IUnitOfWork uow)
-        {
-            Database = uow;
-        }
+        //public TaskService(IUnitOfWork uow)
+        //{
+        //    Database = uow;
+        //}
+       
         public IEnumerable<TaskDTO> GetTasks(string sort, string label)
         {
             int labelId = -1;

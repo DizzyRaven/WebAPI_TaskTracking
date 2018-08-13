@@ -30,7 +30,7 @@ namespace API.Controllers
         {
             this.taskService = taskService;
         }
-
+        [AllowAnonymous]
         [Route("tasks", Name = "TasksList")]
         [HttpGet]
 

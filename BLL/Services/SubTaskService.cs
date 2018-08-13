@@ -26,10 +26,10 @@ namespace BLL.Services
         {
             Database = new EFUnitOfWork(connectionString);
         }
-        public SubTaskService(IUnitOfWork uow)
-        {
-            Database = uow;
-        }
+        //public SubTaskService(IUnitOfWork uow)
+        //{
+        //    Database = uow;
+        //}
         public SubTaskDTO AddSubTask(SubTaskDTO subTaskDTO)
         {
             //Task task = Database.Tasks.Get(subTaskDTO.TaskId);
