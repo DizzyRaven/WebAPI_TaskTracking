@@ -9,10 +9,12 @@ using BLL.DTO;
 using TaskTrackingAPI.Models;
 using BLL.Infrastructure;
 using BLL.Services;
+using TaskTrackingAPI.Factories;
 
 using Marvin.JsonPatch;
 using System.Web.Http.Routing;
 using System.Web;
+using Ninject;
 
 namespace TaskTrackingAPI.Controllers
 {
@@ -20,36 +22,33 @@ namespace TaskTrackingAPI.Controllers
     public class TasksController : ApiController
     {
         const int maxPageSize = 3;
-        static string connection = "defaultdb";
-        //ITaskService taskService = new TaskService(connection);
-        ITaskService taskService = new TaskService(connection);
-        public TasksController()
-        {
-
-        }
+        private readonly ITaskService taskService;
+        private TaskFactory taskFactory = new TaskFactory();
+     
         public TasksController(ITaskService taskService)
         {
             this.taskService = taskService;
         }
-        [AllowAnonymous]
+       // [Authorize(Roles = "manager")]
         [Route("tasks", Name = "TasksList")]
         [HttpGet]
-
         public IHttpActionResult GetTasks(string sort = "id", string label = null, string fields = null, int page = 1, int pageSize = 5)
         {
             try
             {
                 var tasks = taskService.GetTasks(sort, label);
-                
-                
+
+
                 int totalCount = tasks.Count();
-                var paginationHeader = Pagination.GetPaginationHeader(pageSize, maxPageSize,totalCount, page,Request,sort,label);
+                var paginationHeader = Pagination.GetPaginationHeader(pageSize, maxPageSize, totalCount, page, Request, sort, label);
 
                 HttpContext.Current.Response.Headers.Add("X-Pagination",
                    Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
 
                 return Ok(tasks
-                    .Skip(pageSize*(page-1)).Take(pageSize));
+                    .Skip(pageSize * (page - 1))
+                    .Take(pageSize)
+                    .Select(t => taskFactory.CreateTask(t)));
             }
             catch (Exception e)
             {
@@ -57,14 +56,15 @@ namespace TaskTrackingAPI.Controllers
             }
 
         }
-
+       [Authorize(Roles ="admin,user")]
         [Route("tasks/{id}")]
         [HttpGet]
         public IHttpActionResult GetById(int id)
         {
             try
             {
-                var task = taskService.GetTask(id);
+                var task = taskFactory.CreateTask(taskService.GetTask(id));
+
                 return Ok(task);
             }
             catch (ValidationException ex)

@@ -15,6 +15,7 @@ namespace DAL.Entities
         public int? LabelId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public float Progress { get; set; }
 
         public DateTime? StartDate { get; set; }
         public DateTime? DeadLine { get; set; }

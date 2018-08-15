@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace BLL.DTO
+namespace TaskTrackingAPI.Models
 {
-    public class TaskDTO
+   
+    public class TaskViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -17,6 +17,5 @@ namespace BLL.DTO
         public DateTime? DeadLine { get; set; }
 
         public int? TaskLabelId { get; set; }
-        public ICollection<SubTaskDTO> SubTasks { get; set; }
     }
 }

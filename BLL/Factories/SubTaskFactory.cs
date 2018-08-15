@@ -17,6 +17,7 @@ namespace BLL.Factories
                 Id = subTask.Id,
                 Name = subTask.Name,
                 Description = subTask.Description,
+                IsDone = subTask.IsDone,
                 TaskId = subTask.TaskId
             };
         }
@@ -28,6 +29,7 @@ namespace BLL.Factories
                 Id = subTaskDto.Id,
                 Name = subTaskDto.Name,
                 Description = subTaskDto.Description,
+                IsDone = subTaskDto.IsDone,
                 TaskId = subTaskDto.TaskId
             };
         }

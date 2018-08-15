@@ -24,6 +24,7 @@ namespace BLL.Factories
                 Id = task.Id,
                 Name = task.Name,
                 Description = task.Description,
+                Progress = task.Progress,
                 StartDate = task.StartDate,
                 DeadLine = task.DeadLine,
                 TaskLabelId = task.LabelId,
@@ -37,6 +38,7 @@ namespace BLL.Factories
                 Id = taskDTO.Id,
                 Name = taskDTO.Name,
                 Description = taskDTO.Description,
+                Progress = taskDTO.Progress,
                 StartDate = taskDTO.StartDate,
                 DeadLine = taskDTO.DeadLine,
                 CreationDate = DateTime.Now,
@@ -44,5 +46,6 @@ namespace BLL.Factories
                 SubTasks = taskDTO.SubTasks == null ? new List<SubTask>() : taskDTO.SubTasks.Select(subTask => subTaskFactory.CreateSubTask(subTask)).ToList()
             };
         }
+       
     }
 }

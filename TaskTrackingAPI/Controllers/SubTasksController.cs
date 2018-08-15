@@ -9,6 +9,7 @@ using BLL.DTO;
 using TaskTrackingAPI.Models;
 using BLL.Infrastructure;
 using BLL.Services;
+using TaskTrackingAPI.Factories;
 
 using Marvin.JsonPatch;
 
@@ -17,12 +18,9 @@ namespace TaskTrackingAPI.Controllers
     [RoutePrefix("api")]
     public class SubTasksController : ApiController
     {
-        static string connection = "defaultdb";
         ISubTaskService subTaskService;
-        public SubTasksController()
-        {
-            subTaskService = new SubTaskService(connection);
-        }
+        SubTaskFactory subTaskFactory = new SubTaskFactory();
+
         public SubTasksController(ISubTaskService subTaskService)
         {
             this.subTaskService = subTaskService;
@@ -34,7 +32,8 @@ namespace TaskTrackingAPI.Controllers
         {
             try
             {
-                var tasks = subTaskService.GetSubTasks(taskId);
+                var tasks = subTaskService.GetSubTasks(taskId).Select( s => subTaskFactory.CreateSubTask(s));
+                
                 return Ok(tasks);
             }
             catch (ValidationException ex)
@@ -53,7 +52,7 @@ namespace TaskTrackingAPI.Controllers
         {
             try
             {
-                SubTaskDTO result = subTaskService.GetSubTask(id, taskId);
+                SubTaskViewModel result = subTaskFactory.CreateSubTask(subTaskService.GetSubTask(id, taskId));
                 return Ok(result);
             }
             catch (ValidationException)

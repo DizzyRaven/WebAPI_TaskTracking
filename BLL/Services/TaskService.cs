@@ -15,6 +15,7 @@ using BLL.Interfaces;
 using DAL.Repositories;
 using BLL.Factories;
 using BLL.Helpers;
+using BLL.BusinessModels;
 
 namespace BLL.Services
 {
@@ -22,18 +23,13 @@ namespace BLL.Services
     {
         IUnitOfWork Database { get; set; }
         TaskFactory taskFactory = new TaskFactory();
-        // TODO: dependency injection, remove hardcoding of Unit of work
-        public TaskService(string connectionString)
-        {
-            Database = new EFUnitOfWork(connectionString);
-        }
 
         // Interaction with DAL using IUnitOfWork object
-        //public TaskService(IUnitOfWork uow)
-        //{
-        //    Database = uow;
-        //}
-       
+        public TaskService(IUnitOfWork uow)
+        {
+            Database = uow;
+        }
+
         public IEnumerable<TaskDTO> GetTasks(string sort, string label)
         {
             int labelId = -1;
@@ -79,6 +75,7 @@ namespace BLL.Services
         public TaskDTO AddTask(TaskDTO taskDTO)
         {
             Task task = taskFactory.CreateTask(taskDTO);
+            task.Progress = TaskProgress.GetTaskProgress(task);
             var result = Database.Tasks.Create(task);
             if (result.Status == DAL.RepositoryActionStatus.Created)
             {
@@ -90,6 +87,7 @@ namespace BLL.Services
         public TaskDTO UpdateTask(int id, TaskDTO taskDTO)
         {
             Task task = taskFactory.CreateTask(taskDTO);
+            task.Progress = TaskProgress.GetTaskProgress(task);
 
             var result = Database.Tasks.Update(task);
             if (result.Status == DAL.RepositoryActionStatus.Updated)
@@ -120,9 +118,10 @@ namespace BLL.Services
             taskPatchDocument.ApplyTo(taskDTO);
 
             // Convertion patched dto to entity
-            Task restask = taskFactory.CreateTask(taskDTO);
+            Task resTask = taskFactory.CreateTask(taskDTO);
+            task.Progress = TaskProgress.GetTaskProgress(resTask);
 
-            Database.Tasks.Update(restask);
+            Database.Tasks.Update(resTask);
             Database.Save();
 
             return taskDTO;

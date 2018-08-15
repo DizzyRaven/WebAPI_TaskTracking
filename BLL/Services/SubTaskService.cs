@@ -22,14 +22,10 @@ namespace BLL.Services
         IUnitOfWork Database { get; set; }
         SubTaskFactory subTaskFactory = new SubTaskFactory();
 
-        public SubTaskService(string connectionString)
+        public SubTaskService(IUnitOfWork uow)
         {
-            Database = new EFUnitOfWork(connectionString);
+            Database = uow;
         }
-        //public SubTaskService(IUnitOfWork uow)
-        //{
-        //    Database = uow;
-        //}
         public SubTaskDTO AddSubTask(SubTaskDTO subTaskDTO)
         {
             //Task task = Database.Tasks.Get(subTaskDTO.TaskId);
